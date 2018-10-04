@@ -34,23 +34,39 @@ public class Main {
 //		route[3] = '3';
 //		nodes = getExampleMatrix();
 		
-	    char[] route = new char[10];
-	    route[0] = '0';
-	    route[1] = '1';
-	    route[2] = '2';
-	    route[3] = '3';
-	    route[4] = '4';
-	    route[5] = '5';
-	    route[6] = '6';
-	    route[7] = '7';
-	    route[8] = '8';
-	    route[9] = '9';
+	    int[] route = new int[16];
+	    route[0] = 0;
+	    route[1] = 1;
+	    route[2] = 2;
+	    route[3] = 3;
+	    route[4] = 4;
+	    route[5] = 5;
+	    route[6] = 6;
+	    route[7] = 7;
+	    route[8] = 8;
+	    route[9] = 9;
+	    route[10] = 10;
+	    route[11] = 11;
+	    route[12] = 12;
+	    route[13] = 13;
+	    route[14] = 14;
+	    route[15] = 15;
+	    
+	    File pwd = new File(System.getProperty("user.dir"));
+	    
+        File[] filesList = pwd.listFiles();
+        for(File f : filesList){
+            if(f.isFile()){
+                System.out.println(f.getName());
+            }
+        }
 
+	    
 		nodes = getMatrixFromCSV("ulysses16.csv");
 		
 		route = getRandomRoute(route);
 		System.out.println("Travelling Salesman:");
-		System.out.println(route);
+		System.out.println(Arrays.toString(route));
 		System.out.println("Cost of route: " + getCostOfRoute(route));
 	}
 
@@ -59,11 +75,11 @@ public class Main {
 	 * @param routeToEvaluate
 	 * @return
 	 */
-	private int getCostOfRoute(char[] routeToEvaluate) {
+	private int getCostOfRoute(int[] routeToEvaluate) {
 		int cost = 0;
 		for (int i = 0; i < routeToEvaluate.length - 1; i++) {
-			int x = Character.getNumericValue(routeToEvaluate[i]);
-			int y = Character.getNumericValue(routeToEvaluate[i + 1]);
+			int x = routeToEvaluate[i];
+			int y = routeToEvaluate[i + 1];
 			cost += nodes[x][y];
 		}
 		return cost;
@@ -75,13 +91,13 @@ public class Main {
 	 * @param destinations
 	 * @return
 	 */
-	private char[] getRandomRoute(char[] destinations) {
+	private int[] getRandomRoute(int[] destinations) {
 		Random rdm = new Random();
-		char[] newRoute = new char[destinations.length + 1];
+		int[] newRoute = new int[destinations.length + 1];
 		
 		for (int i = destinations.length - 1; i > 0; i --) {
 			int index = rdm.nextInt(i+1);
-			char a = destinations[index];
+			int a = destinations[index];
 			destinations[index] = destinations[i];
 			destinations[i] = a;
 		}
