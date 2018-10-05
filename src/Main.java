@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 /**
  * Implementation of the travelling salesperson problem used for CS3910.
  * @author Lewis
@@ -52,22 +53,11 @@ public class Main {
 	    route[14] = 14;
 	    route[15] = 15;
 	    
-	    File pwd = new File(System.getProperty("user.dir"));
-	    
-        File[] filesList = pwd.listFiles();
-        for(File f : filesList){
-            if(f.isFile()){
-                System.out.println(f.getName());
-            }
-        }
-
-	    
 		nodes = getMatrixFromCSV("ulysses16.csv");
 		
-		route = getRandomRoute(route);
 		System.out.println("Travelling Salesman:");
 		System.out.println(Arrays.toString(route));
-		System.out.println("Cost of route: " + getCostOfRoute(route));
+		System.out.println(randomTSPSolution(route, 1));
 	}
 
 	/**
@@ -75,8 +65,8 @@ public class Main {
 	 * @param routeToEvaluate
 	 * @return
 	 */
-	private int getCostOfRoute(int[] routeToEvaluate) {
-		int cost = 0;
+	private double getCostOfRoute(int[] routeToEvaluate) {
+		double cost = 0;
 		for (int i = 0; i < routeToEvaluate.length - 1; i++) {
 			int x = routeToEvaluate[i];
 			int y = routeToEvaluate[i + 1];
@@ -188,6 +178,31 @@ public class Main {
 		nodes[3][2] = 12;
 		nodes[3][3] = 0;
 		return nodes;
+	}
+	
+	/**
+	 * attempts to solve the TSP by generating random routes and returning the best result after a certain amount of time
+	 * @param cities
+	 * @param seconds
+	 * @return
+	 */
+	private String randomTSPSolution(int[] route, int seconds){
+		// stores the best result
+		int[] bestRoute = null;
+		// and how much it costs
+		double bestRouteCost = Double.MAX_VALUE;
+		// for the number of seconds given, generate random routes
+		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
+		while(endCondition > System.nanoTime()){
+			int[] newRoute = getRandomRoute(route);
+			double newCost = getCostOfRoute(newRoute);
+			if (newCost < bestRouteCost){
+				bestRoute = newRoute;
+				bestRouteCost = newCost;
+			}
+		}
+		
+		return "The best route is " + Arrays.toString(bestRoute) + " with a cost of " + bestRouteCost + ".";
 	}
 	
 }
