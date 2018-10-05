@@ -30,38 +30,37 @@ public class Main {
 	}
 	
 	public Main() {
-		int[] route = new int[4];
+//		int[] route = new int[4];
+//		
+//		route[0] = 0;
+//		route[1] = 1;
+//		route[2] = 2;
+//		route[3] = 3;
+//		
+//		nodes = getExampleMatrix(new double[4][4]);
 		
-		route[0] = 0;
-		route[1] = 1;
-		route[2] = 2;
-		route[3] = 3;
-		
-		nodes = getExampleMatrix(new double[4][4]);
-		
-//	    int[] route = new int[16];
-//	    route[0] = 0;
-//	    route[1] = 1;
-//	    route[2] = 2;
-//	    route[3] = 3;
-//	    route[4] = 4;
-//	    route[5] = 5;
-//	    route[6] = 6;
-//	    route[7] = 7;
-//	    route[8] = 8;
-//	    route[9] = 9;
-//	    route[10] = 10;
-//	    route[11] = 11;
-//	    route[12] = 12;
-//	    route[13] = 13;
-//	    route[14] = 14;
-//	    route[15] = 15;
-//	    
-//		nodes = getMatrixFromCSV("ulysses16.csv");
+	    int[] route = new int[16];
+	    route[0] = 0;
+	    route[1] = 1;
+	    route[2] = 2;
+	    route[3] = 3;
+	    route[4] = 4;
+	    route[5] = 5;
+	    route[6] = 6;
+	    route[7] = 7;
+	    route[8] = 8;
+	    route[9] = 9;
+	    route[10] = 10;
+	    route[11] = 11;
+	    route[12] = 12;
+	    route[13] = 13;
+	    route[14] = 14;
+	    route[15] = 15;
+		nodes = getMatrixFromCSV("ulysses16.csv");
 			
-//		System.out.println("Travelling Salesperson");
-//		System.out.println("Random search:");
-//		System.out.println(randomTSPSolution(route, 1));
+		System.out.println("Travelling Salesperson");
+		System.out.println("Random search:");
+		System.out.println(randomTSPSolution(route, 1));
 		System.out.println("Neighbourhood of :" + Arrays.toString(route));
 		ArrayList<int[]> neighbourhood = getTwoOptNeighbourhood(route);
 		for (int[] n : neighbourhood) {
@@ -222,10 +221,8 @@ public class Main {
 		ArrayList<int[]> neighbourhood = new ArrayList<int[]>();
 		// for every item in the tour
 		for (int x = 0; x < tour.length; x++) {
-			System.out.println("x : " + x);
 			// switches with every item in the tour
 			for (int y = 0; y < tour.length; y++) {
-				System.out.println("y : " + y);
 				int[] twoOpt = tour.clone();
 				int tmp = twoOpt[y];
 				twoOpt[y] = twoOpt[x];
