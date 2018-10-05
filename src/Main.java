@@ -3,15 +3,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 /**
  * Implementation of the travelling salesperson problem used for CS3910.
@@ -27,37 +30,44 @@ public class Main {
 	}
 	
 	public Main() {
-//		char[] route = new char[4];
-//		
-//		route[0] = '0';
-//		route[1] = '1';
-//		route[2] = '2';
-//		route[3] = '3';
-//		nodes = getExampleMatrix();
+		int[] route = new int[4];
 		
-	    int[] route = new int[16];
-	    route[0] = 0;
-	    route[1] = 1;
-	    route[2] = 2;
-	    route[3] = 3;
-	    route[4] = 4;
-	    route[5] = 5;
-	    route[6] = 6;
-	    route[7] = 7;
-	    route[8] = 8;
-	    route[9] = 9;
-	    route[10] = 10;
-	    route[11] = 11;
-	    route[12] = 12;
-	    route[13] = 13;
-	    route[14] = 14;
-	    route[15] = 15;
-	    
-		nodes = getMatrixFromCSV("ulysses16.csv");
+		route[0] = 0;
+		route[1] = 1;
+		route[2] = 2;
+		route[3] = 3;
 		
-		System.out.println("Travelling Salesman:");
-		System.out.println(Arrays.toString(route));
-		System.out.println(randomTSPSolution(route, 1));
+		nodes = getExampleMatrix(new double[4][4]);
+		
+//	    int[] route = new int[16];
+//	    route[0] = 0;
+//	    route[1] = 1;
+//	    route[2] = 2;
+//	    route[3] = 3;
+//	    route[4] = 4;
+//	    route[5] = 5;
+//	    route[6] = 6;
+//	    route[7] = 7;
+//	    route[8] = 8;
+//	    route[9] = 9;
+//	    route[10] = 10;
+//	    route[11] = 11;
+//	    route[12] = 12;
+//	    route[13] = 13;
+//	    route[14] = 14;
+//	    route[15] = 15;
+//	    
+//		nodes = getMatrixFromCSV("ulysses16.csv");
+			
+//		System.out.println("Travelling Salesperson");
+//		System.out.println("Random search:");
+//		System.out.println(randomTSPSolution(route, 1));
+		System.out.println("Neighbourhood of :" + Arrays.toString(route));
+		ArrayList<int[]> neighbourhood = getTwoOptNeighbourhood(route);
+		for (int[] n : neighbourhood) {
+			System.out.println(Arrays.toString(n));
+		}
+		System.out.println("_______________________");
 	}
 
 	/**
@@ -158,9 +168,8 @@ public class Main {
 	
 	/**
 	 * returns the hardcoded Travelling Salesperson structure example from Lab 1 
-	 * @return
 	 */
-	private double[][] getExampleMatrix(){
+	private double[][] getExampleMatrix(double[][] nodes){
 		nodes[0][0] = 0;
 		nodes[0][1] = 20;
 		nodes[0][2] = 42;
@@ -201,8 +210,38 @@ public class Main {
 				bestRouteCost = newCost;
 			}
 		}
-		
 		return "The best route is " + Arrays.toString(bestRoute) + " with a cost of " + bestRouteCost + ".";
 	}
 	
+	/**
+	 * Returns the 2 opt neighbourhood of a given route.
+	 * @param tour
+	 * @return
+	 */
+	private ArrayList<int[]> getTwoOptNeighbourhood(int[] tour){
+		ArrayList<int[]> neighbourhood = new ArrayList<int[]>();
+		// for every item in the tour
+		for (int x = 0; x < tour.length; x++) {
+			System.out.println("x : " + x);
+			// switches with every item in the tour
+			for (int y = 0; y < tour.length; y++) {
+				System.out.println("y : " + y);
+				int[] twoOpt = tour.clone();
+				int tmp = twoOpt[y];
+				twoOpt[y] = twoOpt[x];
+				twoOpt[x] = tmp;
+				boolean match = false;
+				// if the NEW tour already exists in the neighbourhood, don't add it again
+				for (int[] route: neighbourhood) {
+					if (Arrays.equals(twoOpt,route)) {
+						match = true;
+					}
+				}
+				if (match == false) {
+					neighbourhood.add(twoOpt);
+				}
+			}
+		}
+		return neighbourhood;
+	}
 }
