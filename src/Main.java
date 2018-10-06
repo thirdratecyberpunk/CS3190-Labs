@@ -49,13 +49,9 @@ public class Main {
 			
 		System.out.println("Travelling Salesperson");
 		System.out.println("Random search:");
-		System.out.println(randomTSPSolution(route, 1));
-		ArrayList<int[]> neighbourhood = getTwoOptNeighbourhood(route);
-		for (int[] possibleRoute : neighbourhood) {
-			System.out.println(Arrays.toString(possibleRoute));
-		}
-		int[] bestRouteInNeighbourhood = getBestRouteInNeighbourhood(neighbourhood);
-		System.out.println("Best route in neighbourhood : " + Arrays.toString(bestRouteInNeighbourhood) + " with a cost of " + getCostOfRoute(bestRouteInNeighbourhood));
+		System.out.println(randomTSPSolution(route, 20));
+		System.out.println("Two OPT local search:");
+		System.out.println(twoOptTSPSolution(route, 20));
 	}
 
 	/**
@@ -142,7 +138,7 @@ public class Main {
 					double fromY = Double.parseDouble(cityValues[x][2]);
 					double toX = Double.parseDouble(cityValues[y][1]);
 					double toY = Double.parseDouble(cityValues[y][2]);
-					csvMatrix[x][y] = getCostBetweenCities(fromX, fromY, toX, toY);
+					csvMatrix[x][y] = getCostBetweenCities(fromX, toX, fromY, toY);
 				}
 			}
 			return csvMatrix;
@@ -201,6 +197,59 @@ public class Main {
 	}
 	
 	/**
+	 * attempts to solve the travelling salesperson problem
+	 * @param exampleRoute
+	 * @param seconds
+	 * @return
+	 */
+	private String twoOptTSPSolution(int[] exampleRoute, int seconds) {
+		// stores the best result
+		int[] bestRoute = null;
+		// and how much it costs
+		double bestRouteCost = Double.MAX_VALUE;
+		// for the number of seconds given, generate random routes
+		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
+		while(endCondition > System.nanoTime()){
+			// generate a random route
+			int[] newRandomRoute = getRandomRoute(exampleRoute);
+			// get the local optima for it
+			bestRoute = getLocalOptima(newRandomRoute);
+			bestRouteCost = getCostOfRoute(bestRoute);
+		}
+		return "The best route according to twoOptTSPSolution is " + Arrays.toString(bestRoute) + " with a cost of " + bestRouteCost + ".";
+	}
+	
+	/**
+	 * returns the local optima for a given route
+	 * @param localOptimaRandom
+	 * @return
+	 */
+	private int[] getLocalOptima(int[] localOptimaRandom) {
+		// contains the best solution from the previous neighbourhood
+		int[] previousBest = localOptimaRandom;
+		// contains the best solution from the current neighbourhood
+		int[] currentBest = new int[localOptimaRandom.length];
+		// generate the neighbourhood of solutions for the route
+		while (!Arrays.equals(previousBest, currentBest)) {
+			ArrayList<int[]> neighbourhood = getTwoOptNeighbourhood(previousBest);
+			// find the best solution in that neighbourhood
+			currentBest = getBestRouteInNeighbourhood(neighbourhood);
+			// if that route is the best solution in the neighbourhood, return it as the optimum
+			if (Arrays.equals(currentBest, previousBest)) {
+				return currentBest;
+			}
+			// otherwise, generate a new neighbourhood with the new solution
+			else {
+				int[] tmp = currentBest;
+				currentBest = new int[localOptimaRandom.length];
+				previousBest = tmp;
+			}
+		}
+		System.out.println("currentBest : " + Arrays.toString(currentBest));
+		return currentBest;
+	}
+	
+	/**
 	 * Returns the 2 opt neighbourhood of a given route.
 	 * @param tour
 	 * @return
@@ -239,7 +288,6 @@ public class Main {
 		int[] bestRoute = null;
 		double bestCost = Double.MAX_VALUE;
 		for (int[] route: neighbourhood) {
-//			System.out.println(Arrays.toString(route) + " " + getCostOfRoute(route));
 			if (getCostOfRoute(route) < bestCost) {
 				bestRoute = route;
 				bestCost = getCostOfRoute(route);
