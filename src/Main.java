@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Implementation of the travelling salesperson problem used for CS3910.
  * @author Lewis
- *
  */
 public class Main {
 	// matrix containing nodes in a representation of the problem
@@ -22,36 +21,17 @@ public class Main {
 	
 	public Main() {
 //		int[] route = new int[4];
-//		route[0] = 0;
-//		route[1] = 1;
-//		route[2] = 2;
-//		route[3] = 3;
+//		int[] route = {0,1,2,3};
 //		nodes = getExampleMatrix(new double[4][4]);
 		
-	    int[] route = new int[16];
-	    route[0] = 0;
-	    route[1] = 1;
-	    route[2] = 2;
-	    route[3] = 3;
-	    route[4] = 4;
-	    route[5] = 5;
-	    route[6] = 6;
-	    route[7] = 7;
-	    route[8] = 8;
-	    route[9] = 9;
-	    route[10] = 10;
-	    route[11] = 11;
-	    route[12] = 12;
-	    route[13] = 13;
-	    route[14] = 14;
-	    route[15] = 15;
+	    int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 		nodes = getMatrixFromCSV("ulysses16.csv");
 			
 		System.out.println("Travelling Salesperson");
 		System.out.println("Random search:");
-		System.out.println(randomTSPSolution(route, 20));
+		System.out.println(randomTSPSolution(route, 1));
 		System.out.println("Two OPT local search:");
-		System.out.println(twoOptTSPSolution(route, 20));
+		System.out.println(twoOptTSPSolution(route, 1));
 	}
 
 	/**
@@ -240,9 +220,8 @@ public class Main {
 			}
 			// otherwise, generate a new neighbourhood with the new solution
 			else {
-				int[] tmp = currentBest;
+				previousBest = currentBest;
 				currentBest = new int[localOptimaRandom.length];
-				previousBest = tmp;
 			}
 		}
 		System.out.println("currentBest : " + Arrays.toString(currentBest));
@@ -288,9 +267,10 @@ public class Main {
 		int[] bestRoute = null;
 		double bestCost = Double.MAX_VALUE;
 		for (int[] route: neighbourhood) {
-			if (getCostOfRoute(route) < bestCost) {
+			double cost = getCostOfRoute(route);
+			if (cost < bestCost) {
 				bestRoute = route;
-				bestCost = getCostOfRoute(route);
+				bestCost = cost;
 			}
 		}
 		return bestRoute;
