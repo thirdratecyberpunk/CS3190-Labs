@@ -21,38 +21,39 @@ public class Main {
 	}
 	
 	public Main() {
-		int[] route = new int[4];
+//		int[] route = new int[4];
+//		route[0] = 0;
+//		route[1] = 1;
+//		route[2] = 2;
+//		route[3] = 3;
+//		nodes = getExampleMatrix(new double[4][4]);
 		
-		route[0] = 0;
-		route[1] = 1;
-		route[2] = 2;
-		route[3] = 3;
-		
-		nodes = getExampleMatrix(new double[4][4]);
-		
-//	    int[] route = new int[16];
-//	    route[0] = 0;
-//	    route[1] = 1;
-//	    route[2] = 2;
-//	    route[3] = 3;
-//	    route[4] = 4;
-//	    route[5] = 5;
-//	    route[6] = 6;
-//	    route[7] = 7;
-//	    route[8] = 8;
-//	    route[9] = 9;
-//	    route[10] = 10;
-//	    route[11] = 11;
-//	    route[12] = 12;
-//	    route[13] = 13;
-//	    route[14] = 14;
-//	    route[15] = 15;
-//		nodes = getMatrixFromCSV("ulysses16.csv");
+	    int[] route = new int[16];
+	    route[0] = 0;
+	    route[1] = 1;
+	    route[2] = 2;
+	    route[3] = 3;
+	    route[4] = 4;
+	    route[5] = 5;
+	    route[6] = 6;
+	    route[7] = 7;
+	    route[8] = 8;
+	    route[9] = 9;
+	    route[10] = 10;
+	    route[11] = 11;
+	    route[12] = 12;
+	    route[13] = 13;
+	    route[14] = 14;
+	    route[15] = 15;
+		nodes = getMatrixFromCSV("ulysses16.csv");
 			
 		System.out.println("Travelling Salesperson");
 		System.out.println("Random search:");
 		System.out.println(randomTSPSolution(route, 1));
 		ArrayList<int[]> neighbourhood = getTwoOptNeighbourhood(route);
+		for (int[] possibleRoute : neighbourhood) {
+			System.out.println(Arrays.toString(possibleRoute));
+		}
 		int[] bestRouteInNeighbourhood = getBestRouteInNeighbourhood(neighbourhood);
 		System.out.println("Best route in neighbourhood : " + Arrays.toString(bestRouteInNeighbourhood) + " with a cost of " + getCostOfRoute(bestRouteInNeighbourhood));
 	}
@@ -78,21 +79,20 @@ public class Main {
 	 * @param destinations
 	 * @return
 	 */
-	private int[] getRandomRoute(int[] destinations) {
+	private int[] getRandomRoute(int[] sourceRoute) {
 		Random rdm = new Random();
-		int[] newRoute = new int[destinations.length];
-		
-		for (int i = destinations.length - 1; i > 0; i --) {
+		int[] randomisedRoute = new int[sourceRoute.length];
+		int[] toRandomise = sourceRoute.clone();
+		for (int i = toRandomise.length - 1; i > 0; i--) {
 			int index = rdm.nextInt(i+1);
-			int a = destinations[index];
-			destinations[index] = destinations[i];
-			destinations[i] = a;
+			int a = toRandomise[index];
+			toRandomise[index] = toRandomise[i];
+			toRandomise[i] = a;
 		}
-		for (int i = 0; i < destinations.length; i++) {
-			newRoute[i] = destinations[i];
+		for (int i = 0; i < toRandomise.length; i++) {
+			randomisedRoute[i] = toRandomise[i];
 		}
-//		newRoute[newRoute.length - 1] = newRoute[0];
-		return newRoute;
+		return randomisedRoute;
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public class Main {
 	 * @param seconds
 	 * @return
 	 */
-	private String randomTSPSolution(int[] route, int seconds){
+	private String randomTSPSolution(int[] exampleRoute, int seconds){
 		// stores the best result
 		int[] bestRoute = null;
 		// and how much it costs
@@ -190,12 +190,11 @@ public class Main {
 		// for the number of seconds given, generate random routes
 		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
 		while(endCondition > System.nanoTime()){
-			int[] newRoute = getRandomRoute(route);
+			int[] newRoute = getRandomRoute(exampleRoute);
 			double newCost = getCostOfRoute(newRoute);
 			if (newCost < bestRouteCost){
 				bestRoute = newRoute;
 				bestRouteCost = newCost;
-//				System.out.println("Updated best route: " + Arrays.toString(bestRoute) + " : " + bestRouteCost);
 			}
 		}
 		return "The best route is " + Arrays.toString(bestRoute) + " with a cost of " + bestRouteCost + ".";
@@ -209,9 +208,9 @@ public class Main {
 	private ArrayList<int[]> getTwoOptNeighbourhood(int[] tour){
 		ArrayList<int[]> neighbourhood = new ArrayList<int[]>();
 		// for every item in the tour
-		for (int x = 0; x < tour.length; x++) {
+		for (int x = 0; x <= tour.length -1; x++) {
 			// switches with every item in the tour
-			for (int y = 0; y < tour.length; y++) {
+			for (int y = 0; y <= tour.length -1; y++) {
 				int[] twoOpt = tour.clone();
 				int tmp = twoOpt[y];
 				twoOpt[y] = twoOpt[x];
@@ -240,7 +239,7 @@ public class Main {
 		int[] bestRoute = null;
 		double bestCost = Double.MAX_VALUE;
 		for (int[] route: neighbourhood) {
-			System.out.println(Arrays.toString(route) + " " + getCostOfRoute(route));
+//			System.out.println(Arrays.toString(route) + " " + getCostOfRoute(route));
 			if (getCostOfRoute(route) < bestCost) {
 				bestRoute = route;
 				bestCost = getCostOfRoute(route);
