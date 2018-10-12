@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation of the antenna array problem used in CS3910.
@@ -16,8 +17,8 @@ public class AntennaArrayProblem {
 		AntennaArray aa = new AntennaArray(3, 90);
 		double[] design = getRandomValidSolution(aa);
 		System.out.println("Antenna Array design problem");
-		System.out.println(Arrays.toString(design));
-		System.out.println(aa.evaluate(design));
+		System.out.println("Random search solution:");
+		System.out.println(getRandomSearchSolution(aa, 10));
 	}
 	
 	/**
@@ -48,5 +49,28 @@ public class AntennaArrayProblem {
 		}
 		return newRandomSolution;
 	}
-
+	
+	/**
+	 * attempts to solve the antenna problem by generating random antennas and returning the best result after a certain amount of time
+	 * @param aa
+	 * @param seconds
+	 * @return
+	 */
+	private String getRandomSearchSolution(AntennaArray aa, int seconds){
+		// stores the best result
+		double[] bestSolution = null;
+		// and how much it costs
+		double bestSolutionCost = Double.MAX_VALUE;
+		// for the number of seconds given, generate random routes
+		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
+		while(endCondition > System.nanoTime()){
+			double[] newSolution = getRandomValidSolution(aa);
+			double newCost = aa.evaluate(newSolution);
+			if (newCost < bestSolutionCost){
+				bestSolution = newSolution;
+				bestSolutionCost = newCost;
+			}
+		}
+		return "The best route is " + Arrays.toString(bestSolution) + " with a cost of " + bestSolutionCost + ".";
+	}
 }
