@@ -24,14 +24,17 @@ public class Main {
 //		int[] route = {0,1,2,3};
 //		nodes = getExampleMatrix(new double[4][4]);
 		
-	    int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-		nodes = getMatrixFromCSV("ulysses16.csv");
-			
-		System.out.println("Travelling Salesperson");
-		System.out.println("Random search:");
-		System.out.println(randomTSPSolution(route, 1));
-		System.out.println("Two OPT local search:");
-		System.out.println(twoOptTSPSolution(route, 1));
+//	    int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+//		nodes = getMatrixFromCSV("ulysses16.csv");		
+//		System.out.println("Travelling Salesperson");
+//		System.out.println("Random search:");
+//		System.out.println(randomTSPSolution(route, 1));
+//		System.out.println("Two OPT local search:");
+//		System.out.println(twoOptTSPSolution(route, 1));
+		AntennaArray aa = new AntennaArray(3, 90);
+		double[] design = {0.2, 0.8, 1.5};
+		System.out.println(aa.is_valid(design));
+		System.out.println(aa.evaluate(design));
 	}
 
 	/**
