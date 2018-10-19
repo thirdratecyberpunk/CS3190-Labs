@@ -26,7 +26,7 @@ public class AntennaArrayProblem {
 	 * @param aa
 	 * @return
 	 */
-	private double[] getRandomValidSolution(AntennaArray aa) {
+	public static double[] getRandomValidSolution(AntennaArray aa) {
 		boolean valid = false;
 		double[] newRandomSolution = null;
 		double[][] bounds = aa.bounds();
