@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation of the antenna array problem used in CS3910.
- * @author lewis
+ * @author Lewis
  *
  */
 public class AntennaArrayProblem {
@@ -14,11 +14,18 @@ public class AntennaArrayProblem {
 	}
 	
 	public AntennaArrayProblem() {
-		AntennaArray aa = new AntennaArray(3, 90);
-		double[] design = getRandomValidSolution(aa);
+		AntennaArray antennaArray = new AntennaArray(3, 90);
+		double[] design = getRandomValidSolution(antennaArray);
 		System.out.println("Antenna Array design problem");
 		System.out.println("Random search solution:");
-		System.out.println(getRandomSearchSolution(aa, 10));
+		// TODO: make these arguments passed through main method
+		System.out.println(getRandomSearchSolution(antennaArray, 1));
+		double inertialCoefficient = 1 / (2 * Math.log(2));
+		double phi = 1/2 + Math.log(2);
+		double cognitiveCoefficient = phi;
+		double socialCoefficient = phi;
+		Swarm swarm = new Swarm(antennaArray, 3, inertialCoefficient, cognitiveCoefficient, socialCoefficient);
+		System.out.println(swarm.particleSwarmOptimisationSolution(1));
 	}
 	
 	/**
@@ -57,11 +64,8 @@ public class AntennaArrayProblem {
 	 * @return
 	 */
 	private String getRandomSearchSolution(AntennaArray aa, int seconds){
-		// stores the best result
 		double[] bestSolution = null;
-		// and how much it costs
 		double bestSolutionCost = Double.MAX_VALUE;
-		// for the number of seconds given, generate random routes
 		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
 		while(endCondition > System.nanoTime()){
 			double[] newSolution = getRandomValidSolution(aa);
@@ -71,6 +75,6 @@ public class AntennaArrayProblem {
 				bestSolutionCost = newCost;
 			}
 		}
-		return "The best route is " + Arrays.toString(bestSolution) + " with a cost of " + bestSolutionCost + ".";
+		return "The best solution is " + Arrays.toString(bestSolution) + " with a value of " + bestSolutionCost + ".";
 	}
 }
