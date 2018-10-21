@@ -57,4 +57,8 @@ public class Swarm {
 		}
 		return ("The best solution is " + Arrays.toString(globalBest) + " with a value of " + globalBestValue + ".");
 	}
+	
+	public static double[] getGlobalBest() {
+		return globalBest;
+	}
 }

@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * class representing a particle for particle swarm optimisation
  * @author Lewis
@@ -48,7 +50,10 @@ public class Particle {
 	 * updates this particle's vector
 	 */
 	public void updateVelocity() {
-		
+		double[] random0 = generateRandomUniformVector(velocity.length);
+		double[] random1 = generateRandomUniformVector(velocity.length);
+		// how do you multiply vectors together?
+		velocity = inertialCoefficient * velocity + (cognitiveCoefficient * random0 * (personalBest - velocity)) + (socialCoefficient * random1 * (Swarm.getGlobalBest() - personalBest));
 	}
 	
 	/**
@@ -76,5 +81,23 @@ public class Particle {
 	 */
 	public double getPersonalBestValue() {
 		return personalBestValue;
+	}
+	
+	public double[] getDifferenceBetweenVectors() {
+		return null;
+	}
+	
+	/**
+	 * returns a new random uniform vector
+	 * @param dimensions
+	 * @return
+	 */
+	public double[] generateRandomUniformVector(int dimensions) {
+		double[] newUniformVector = new double[dimensions];
+		Random r = new Random();
+		for (int i = 0; i < dimensions; i++) {
+			newUniformVector[i] = r.nextDouble();
+		}
+		return newUniformVector;
 	}
 }
