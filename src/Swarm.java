@@ -13,7 +13,7 @@ public class Swarm {
 	// particles in the swarm
 	private ArrayList<Particle> particles;
 	// best solution encountered by the swarm
-	private double[] globalBest;
+	private static double[] globalBest;
 	// cost of the best solution encountered by the swarm
 	private double globalBestValue;
 	
@@ -21,7 +21,8 @@ public class Swarm {
 	public Swarm(AntennaArray problemInstance, int problemSize, double inertialCoefficient, double cognitiveCoefficient, double socialCoefficient) {
 		this.problemInstance = problemInstance;
 		particles = new ArrayList<Particle>();
-		double swarmSize = (20 + Math.floor(Math.sqrt(problemSize)));
+//		double swarmSize = (20 + Math.floor(Math.sqrt(problemSize)));
+		double swarmSize = 1.0;
 		globalBest = AntennaArrayProblem.getRandomValidSolution(problemInstance);
 		globalBestValue = problemInstance.evaluate(globalBest);
 		for (int i = 0; i < swarmSize; i++) {

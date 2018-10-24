@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -31,7 +32,8 @@ public class Particle {
 		this.cognitiveCoefficient = cognitiveCoefficient;
 		this.socialCoefficient = socialCoefficient;
 		position = AntennaArrayProblem.getRandomValidSolution(antennaArray);
-		velocity = new double[]{0.0, 0.0, 0.0};
+		System.out.println(Arrays.toString(position));
+		velocity = getDifferenceBetweenVectors(AntennaArrayProblem.getRandomValidSolution(antennaArray), position);
 		personalBest = position;
 		personalBestValue = antennaArray.evaluate(position);
 	}
@@ -40,10 +42,25 @@ public class Particle {
 	 * updates this particle's position by adding the particle's vector to its current position
 	 */
 	public void updatePosition() {
-		previousPosition = position;
-		for (int i = 0; i < position.length; i++) {
-			position[i] = position[i] + velocity[i];
+		double[] tmpPosition = position;
+		for (int i = 0; i < tmpPosition.length; i++) {
+			tmpPosition[i] = tmpPosition[i] + velocity[i];
 		}
+		System.out.println("Position : " + Arrays.toString(tmpPosition));
+		System.out.println("Position valid : " + antennaArray.is_valid(tmpPosition));
+		if (antennaArray.is_valid(tmpPosition)){
+			position = tmpPosition;
+			double positionValue = antennaArray.evaluate(position);
+			if (positionValue < personalBestValue){
+				personalBest = position;
+				personalBestValue = positionValue;
+			}
+		}
+		else{
+//			System.exit(1);
+		}
+		System.out.println("________________");
+//		System.exit(1);
 	}
 	
 	/**
@@ -52,8 +69,15 @@ public class Particle {
 	public void updateVelocity() {
 		double[] random0 = generateRandomUniformVector(velocity.length);
 		double[] random1 = generateRandomUniformVector(velocity.length);
-		// how do you multiply vectors together?
-		velocity = inertialCoefficient * velocity + (cognitiveCoefficient * random0 * (personalBest - velocity)) + (socialCoefficient * random1 * (Swarm.getGlobalBest() - personalBest));
+		// calculates differences
+		double[] personalBestVelocityDifference = getDifferenceBetweenVectors(personalBest, velocity);
+		double[] personalBestGlobalBestDifference = getDifferenceBetweenVectors(Swarm.getGlobalBest(), personalBest);
+		double[] newVelocity = new double[velocity.length];
+		for (int i = 0; i < velocity.length - 1; i++){
+			newVelocity[i] = (inertialCoefficient * velocity[i]) + (cognitiveCoefficient * random0[i] * personalBestVelocityDifference[i]) + (socialCoefficient * random1[i] * personalBestGlobalBestDifference[i]);
+		}
+		velocity = newVelocity;
+		System.out.println("Velocity : " + Arrays.toString(velocity));
 	}
 	
 	/**
@@ -83,8 +107,24 @@ public class Particle {
 		return personalBestValue;
 	}
 	
-	public double[] getDifferenceBetweenVectors() {
-		return null;
+	/**
+	 * takes two identical size vectors and returns a new vector of the difference between the two
+	 * @return vectorDifference
+	 */
+	public double[] getDifferenceBetweenVectors(double[] vector0, double[] vector1) {
+		double[] vectorDifference = new double[vector0.length];
+		// error handling
+		if (vector0.length != vector1.length){
+			for (int i = 0; i < vector0.length; i++){
+				vectorDifference[i] = Double.MAX_VALUE;
+			}
+		}
+		else{
+			for (int i = 0; i < vector0.length; i++){
+				vectorDifference[i] = vector0[i] - vector1[i];
+			}
+		}
+		return vectorDifference;
 	}
 	
 	/**

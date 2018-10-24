@@ -17,26 +17,27 @@ public class AntennaArrayProblem {
 		AntennaArray antennaArray = new AntennaArray(3, 90);
 		double[] design = getRandomValidSolution(antennaArray);
 		System.out.println("Antenna Array design problem");
-		System.out.println("Random search solution:");
-		// TODO: make these arguments passed through main method
-		System.out.println(getRandomSearchSolution(antennaArray, 1));
+//		System.out.println("Random search solution:");
+//		// TODO: make these arguments passed through main method
+//		System.out.println(getRandomSearchSolution(antennaArray, 10));
 		double inertialCoefficient = 1 / (2 * Math.log(2));
 		double phi = 1/2 + Math.log(2);
 		double cognitiveCoefficient = phi;
 		double socialCoefficient = phi;
+		System.out.println("Particle swarm optimisation solution");
 		Swarm swarm = new Swarm(antennaArray, 3, inertialCoefficient, cognitiveCoefficient, socialCoefficient);
 		System.out.println(swarm.particleSwarmOptimisationSolution(1));
 	}
 	
 	/**
 	 * Returns a valid double of positions given an AntennaArray instance.
-	 * @param aa
+	 * @param antennaArray
 	 * @return
 	 */
-	public static double[] getRandomValidSolution(AntennaArray aa) {
+	public static double[] getRandomValidSolution(AntennaArray antennaArray) {
 		boolean valid = false;
 		double[] newRandomSolution = null;
-		double[][] bounds = aa.bounds();
+		double[][] bounds = antennaArray.bounds();
 		double maxApertureSize = (bounds.length) / 2.0;
 		while (valid == false) {
 			newRandomSolution = new double[bounds.length];
@@ -50,7 +51,7 @@ public class AntennaArrayProblem {
 			}
 			// sets the final result to the maximum aperture size
 			newRandomSolution[bounds.length - 1] = maxApertureSize;
-			if (aa.is_valid(newRandomSolution)) {
+			if (antennaArray.is_valid(newRandomSolution)) {
 				valid = true;
 			}
 		}
