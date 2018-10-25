@@ -11,8 +11,6 @@ public class Particle {
 	private AntennaArray antennaArray;
 	// current position of the particle
 	private double[] position;
-	// previous position of the particle
-	private double[] previousPosition;
 	// velocity that the particle should move in represented as a vector
 	private double[] velocity;
 	// best solution encountered by the particle
@@ -32,8 +30,7 @@ public class Particle {
 		this.cognitiveCoefficient = cognitiveCoefficient;
 		this.socialCoefficient = socialCoefficient;
 		position = AntennaArrayProblem.getRandomValidSolution(antennaArray);
-		System.out.println(Arrays.toString(position));
-		velocity = getDifferenceBetweenVectors(AntennaArrayProblem.getRandomValidSolution(antennaArray), position);
+		velocity = halfVector(getDifferenceBetweenVectors(AntennaArrayProblem.getRandomValidSolution(antennaArray), position));
 		personalBest = position;
 		personalBestValue = antennaArray.evaluate(position);
 	}
@@ -46,21 +43,17 @@ public class Particle {
 		for (int i = 0; i < tmpPosition.length; i++) {
 			tmpPosition[i] = tmpPosition[i] + velocity[i];
 		}
-		System.out.println("Position : " + Arrays.toString(tmpPosition));
-		System.out.println("Position valid : " + antennaArray.is_valid(tmpPosition));
-		if (antennaArray.is_valid(tmpPosition)){
+		Arrays.sort(tmpPosition);
+		if (antennaArray.is_valid(tmpPosition)) {
 			position = tmpPosition;
 			double positionValue = antennaArray.evaluate(position);
-			if (positionValue < personalBestValue){
+			if (positionValue < personalBestValue) {
 				personalBest = position;
 				personalBestValue = positionValue;
 			}
-		}
-		else{
-//			System.exit(1);
+			System.out.println("Position : " + Arrays.toString(position));
 		}
 		System.out.println("________________");
-//		System.exit(1);
 	}
 	
 	/**
@@ -70,11 +63,11 @@ public class Particle {
 		double[] random0 = generateRandomUniformVector(velocity.length);
 		double[] random1 = generateRandomUniformVector(velocity.length);
 		// calculates differences
-		double[] personalBestVelocityDifference = getDifferenceBetweenVectors(personalBest, velocity);
-		double[] personalBestGlobalBestDifference = getDifferenceBetweenVectors(Swarm.getGlobalBest(), personalBest);
+		double[] personalBestCurrentPositionDifference = getDifferenceBetweenVectors(personalBest, position);
+		double[] globalBestCurrentPositionDifference = getDifferenceBetweenVectors(Swarm.getGlobalBest(), position);
 		double[] newVelocity = new double[velocity.length];
 		for (int i = 0; i < velocity.length - 1; i++){
-			newVelocity[i] = (inertialCoefficient * velocity[i]) + (cognitiveCoefficient * random0[i] * personalBestVelocityDifference[i]) + (socialCoefficient * random1[i] * personalBestGlobalBestDifference[i]);
+			newVelocity[i] = (inertialCoefficient * velocity[i]) + (cognitiveCoefficient * random0[i] * personalBestCurrentPositionDifference[i]) + (socialCoefficient * random1[i] * globalBestCurrentPositionDifference[i]);
 		}
 		velocity = newVelocity;
 		System.out.println("Velocity : " + Arrays.toString(velocity));
@@ -85,7 +78,7 @@ public class Particle {
 	 */
 	public void evaluateCurrentPosition() {
 		double positionEvaluation = antennaArray.evaluate(position);
-		if (positionEvaluation < personalBestValue) {
+		if (positionEvaluation < personalBestValue && antennaArray.is_valid(position)) {
 			personalBest = position;
 			personalBestValue = positionEvaluation;
 		}
@@ -132,12 +125,29 @@ public class Particle {
 	 * @param dimensions
 	 * @return
 	 */
-	public double[] generateRandomUniformVector(int dimensions) {
+	private double[] generateRandomUniformVector(int dimensions) {
 		double[] newUniformVector = new double[dimensions];
 		Random r = new Random();
 		for (int i = 0; i < dimensions; i++) {
 			newUniformVector[i] = r.nextDouble();
 		}
 		return newUniformVector;
+	}
+	
+	/**
+	 * returns a vector with the contents halved given a vector
+	 * @param vector
+	 * @return
+	 */
+	private double[] halfVector(double[] vector) {
+		double[] halfVector = new double[vector.length];
+		for (int i = 0; i < vector.length; i++) {
+			halfVector[i] = vector[i] / 2;
+		}
+		return halfVector;
+	}
+	
+	public double[] getPosition() {
+		return position;
 	}
 }
