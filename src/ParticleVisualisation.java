@@ -90,7 +90,7 @@ class BasicEx extends JFrame
         surface = new Surface();
         add(surface);
 
-        setTitle("PSO visualisation");
+        setTitle("Particle Swarm Optimisation Antenna Array Solution Visualisation");
         setSize(1000, 750);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -21,7 +21,6 @@ public class Swarm {
 		this.problemInstance = problemInstance;
 		particles = new ArrayList<Particle>();
 		double swarmSize = (20 + Math.floor(Math.sqrt(problemSize)));
-		//double swarmSize = 1.0;
 		globalBest = AntennaArrayProblem.getRandomValidSolution(problemInstance);
 		globalBestValue = problemInstance.evaluate(globalBest);
 		for (int i = 0; i < swarmSize; i++) {
@@ -50,9 +49,12 @@ public class Swarm {
 			}
 			//		FOR EACH ( particle in population ) DO
 			for (Particle particle: particles) {
-				// UPDATE velocity and position, then EVALUATE new position and UPDATE personal best;
+				// UPDATE velocity and position
 				particle.updatePosition();
 				particle.updateVelocity();
+				// then EVALUATE new position and UPDATE personal best;
+				particle.evaluateCurrentPosition();
+				System.out.println("_________________");
 			}
 			swarmVisualiser.updatePositions(this);
 		}

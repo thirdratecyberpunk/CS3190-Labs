@@ -43,17 +43,10 @@ public class Particle {
 		for (int i = 0; i < tmpPosition.length; i++) {
 			tmpPosition[i] = tmpPosition[i] + velocity[i];
 		}
-		Arrays.sort(tmpPosition);
 		if (antennaArray.is_valid(tmpPosition)) {
 			position = tmpPosition;
-			double positionValue = antennaArray.evaluate(position);
-			if (positionValue < personalBestValue) {
-				personalBest = position;
-				personalBestValue = positionValue;
-			}
-			System.out.println("Position : " + Arrays.toString(position));
 		}
-		System.out.println("________________");
+		System.out.println("Position : " + Arrays.toString(position));
 	}
 	
 	/**
@@ -131,6 +124,7 @@ public class Particle {
 		for (int i = 0; i < dimensions; i++) {
 			newUniformVector[i] = r.nextDouble();
 		}
+		System.out.println("Random vector : " + Arrays.toString(newUniformVector));
 		return newUniformVector;
 	}
 	
