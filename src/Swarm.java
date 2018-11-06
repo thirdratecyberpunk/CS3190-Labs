@@ -15,14 +15,13 @@ public class Swarm {
 	// best solution encountered by the swarm
 	private static double[] globalBest;
 	// cost of the best solution encountered by the swarm
-	private double globalBestValue;
+	private static double globalBestValue;
 	
 	public Swarm(AntennaArray problemInstance, int problemSize, double inertialCoefficient, double cognitiveCoefficient, double socialCoefficient) {
 		this.problemInstance = problemInstance;
 		particles = new ArrayList<Particle>();
 		double swarmSize = (20 + Math.floor(Math.sqrt(problemSize)));
-		globalBest = AntennaArrayProblem.getRandomValidSolution(problemInstance);
-		globalBestValue = problemInstance.evaluate(globalBest);
+		globalBestValue = Double.MAX_VALUE;
 		for (int i = 0; i < swarmSize; i++) {
 			particles.add(new Particle(problemInstance, inertialCoefficient, cognitiveCoefficient, socialCoefficient));
 		}
@@ -41,24 +40,24 @@ public class Swarm {
 		while(endCondition > System.nanoTime()){
 			//		UPDATE global best;
 			for (Particle particle: particles) {
-				double particleBest = particle.getPersonalBestValue();
-				if (particleBest < globalBestValue) {
-					globalBest = particle.getPersonalBest();
-					globalBestValue = particleBest;
+				double[] particleBest = particle.getPersonalBest();
+				double particleBestValue = particle.getPersonalBestValue();
+				if (problemInstance.is_valid(particleBest) && particleBestValue < globalBestValue) {
+					globalBest = particleBest;
+					globalBestValue = particleBestValue;
 				}
 			}
 			//		FOR EACH ( particle in population ) DO
 			for (Particle particle: particles) {
 				// UPDATE velocity and position
-				particle.updatePosition();
 				particle.updateVelocity();
+				particle.updatePosition();
 				// then EVALUATE new position and UPDATE personal best;
 				particle.evaluateCurrentPosition();
-				System.out.println("_________________");
 			}
 			swarmVisualiser.updatePositions(this);
 		}
-		return ("The best solution is " + Arrays.toString(globalBest) + " with a value of " + globalBestValue + ".");
+		return ("The best solution is " + Arrays.toString(globalBest) + "\nVALID : " + problemInstance.is_valid(globalBest) + " \nValue of " + globalBestValue + ".");
 	}
 	
 	public static double[] getGlobalBest() {

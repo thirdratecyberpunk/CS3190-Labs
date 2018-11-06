@@ -16,16 +16,15 @@ public class AntennaArrayProblem {
 	public AntennaArrayProblem() {
 		AntennaArray antennaArray = new AntennaArray(3, 90);
 		System.out.println("Antenna Array design problem");
-//		TODO: make these arguments passed through main method
-//		double inertialCoefficient = 1 / (2 * Math.log(2));
 		double inertialCoefficient = 0.721;
-//		double phi = (1/2) + Math.log(2);
 		double phi = 1.1193;
 		double cognitiveCoefficient = phi;
 		double socialCoefficient = phi;
+		System.out.println("Random search solution:");
+		System.out.println(getRandomSearchSolution(antennaArray, 4));
 		System.out.println("Particle swarm optimisation solution:");
 		Swarm swarm = new Swarm(antennaArray, 3, inertialCoefficient, cognitiveCoefficient, socialCoefficient);
-		System.out.println(swarm.particleSwarmOptimisationSolution((long) 2.60));
+		System.out.println(swarm.particleSwarmOptimisationSolution((long) 4));
 	}
 	
 	/**

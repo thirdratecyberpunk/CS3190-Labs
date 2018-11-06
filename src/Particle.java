@@ -39,14 +39,13 @@ public class Particle {
 	 * updates this particle's position by adding the particle's vector to its current position
 	 */
 	public void updatePosition() {
-		double[] tmpPosition = position;
+		double[] tmpPosition = Arrays.copyOf(position, position.length);
 		for (int i = 0; i < tmpPosition.length; i++) {
 			tmpPosition[i] = tmpPosition[i] + velocity[i];
 		}
-		if (antennaArray.is_valid(tmpPosition)) {
+		if (antennaArray.is_valid(tmpPosition)){
 			position = tmpPosition;
 		}
-		System.out.println("Position : " + Arrays.toString(position));
 	}
 	
 	/**
@@ -60,10 +59,12 @@ public class Particle {
 		double[] globalBestCurrentPositionDifference = getDifferenceBetweenVectors(Swarm.getGlobalBest(), position);
 		double[] newVelocity = new double[velocity.length];
 		for (int i = 0; i < velocity.length - 1; i++){
-			newVelocity[i] = (inertialCoefficient * velocity[i]) + (cognitiveCoefficient * random0[i] * personalBestCurrentPositionDifference[i]) + (socialCoefficient * random1[i] * globalBestCurrentPositionDifference[i]);
+			double inertialComponent = inertialCoefficient * velocity[i];
+			double cognitiveComponent = cognitiveCoefficient * random0[i] * personalBestCurrentPositionDifference[i];
+			double socialComponent = socialCoefficient * random1[i] * globalBestCurrentPositionDifference[i];
+			newVelocity[i] = inertialComponent + cognitiveComponent + socialComponent;
 		}
 		velocity = newVelocity;
-		System.out.println("Velocity : " + Arrays.toString(velocity));
 	}
 	
 	/**
@@ -71,7 +72,8 @@ public class Particle {
 	 */
 	public void evaluateCurrentPosition() {
 		double positionEvaluation = antennaArray.evaluate(position);
-		if (positionEvaluation < personalBestValue && antennaArray.is_valid(position)) {
+		boolean isValid = antennaArray.is_valid(position);
+		if (isValid && positionEvaluation < personalBestValue) {
 			personalBest = position;
 			personalBestValue = positionEvaluation;
 		}
@@ -121,10 +123,10 @@ public class Particle {
 	private double[] generateRandomUniformVector(int dimensions) {
 		double[] newUniformVector = new double[dimensions];
 		Random r = new Random();
+		Double elem = r.nextDouble();
 		for (int i = 0; i < dimensions; i++) {
-			newUniformVector[i] = r.nextDouble();
+			newUniformVector[i] = elem;
 		}
-		System.out.println("Random vector : " + Arrays.toString(newUniformVector));
 		return newUniformVector;
 	}
 	
