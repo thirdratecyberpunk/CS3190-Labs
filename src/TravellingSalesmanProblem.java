@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class TravellingSalesmanProblem {
 	// matrix containing nodes in a representation of the problem
-	private double[][] nodes;
+	protected double[][] nodes;
+	protected int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 
 	public static void main(String[] args) {
 		new TravellingSalesmanProblem();
@@ -24,7 +25,8 @@ public class TravellingSalesmanProblem {
 //		int[] route = {0,1,2,3};
 //		nodes = getExampleMatrix(new double[4][4]);
 		
-	    int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+		// TODO: make this generate route from contents of csv
+//	    int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 		nodes = getMatrixFromCSV("ulysses16.csv");		
 		System.out.println("Travelling Salesperson");
 		System.out.println("Random search:");
@@ -38,13 +40,14 @@ public class TravellingSalesmanProblem {
 	 * @param routeToEvaluate
 	 * @return
 	 */
-	private double getCostOfRoute(int[] routeToEvaluate) {
+	protected double getCostOfRoute(int[] routeToEvaluate) {
 		double cost = 0;
 		for (int i = 0; i < routeToEvaluate.length - 1; i++) {
 			int x = routeToEvaluate[i];
 			int y = routeToEvaluate[i + 1];
 			cost += nodes[x][y];
 		}
+		cost += nodes[routeToEvaluate[routeToEvaluate.length - 1]][routeToEvaluate[0]];
 		return cost;
 	}
 	
@@ -54,7 +57,7 @@ public class TravellingSalesmanProblem {
 	 * @param destinations
 	 * @return
 	 */
-	private int[] getRandomRoute(int[] sourceRoute) {
+	protected int[] getRandomRoute(int[] sourceRoute) {
 		Random rdm = new Random();
 		int[] randomisedRoute = new int[sourceRoute.length];
 		int[] toRandomise = sourceRoute.clone();
