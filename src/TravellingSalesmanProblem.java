@@ -14,20 +14,18 @@ import java.util.concurrent.TimeUnit;
 public class TravellingSalesmanProblem {
 	// matrix containing nodes in a representation of the problem
 	protected double[][] nodes;
-	protected int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+	protected int[] route;
 
 	public static void main(String[] args) {
 		new TravellingSalesmanProblem();
 	}
 	
-	public TravellingSalesmanProblem() {
-//		int[] route = new int[4];
-//		int[] route = {0,1,2,3};
-//		nodes = getExampleMatrix(new double[4][4]);
-		
-		// TODO: make this generate route from contents of csv
-//	    int[] route = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-		nodes = getMatrixFromCSV("ulysses16.csv");		
+	public TravellingSalesmanProblem() {		
+		nodes = getMatrixFromCSV("inputs/ulysses16.csv");		
+		route = new int[nodes.length];
+		for (int i = 0; i < nodes.length; i++) {
+			route[i] = i;
+		}
 		System.out.println("Travelling Salesperson");
 		System.out.println("Random search:");
 		System.out.println(randomTSPSolution(route, 1));

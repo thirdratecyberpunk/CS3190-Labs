@@ -20,7 +20,7 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 
 	public static void main(String[] args){
 		try {
-			new ArtificialImmuneSystem(5, 5, 5, 5);
+			new ArtificialImmuneSystem(50, 5, 5, 20);
 		} catch (CloneNotSupportedException e) {
 			System.out.println("ERROR CLONING");
 		}
@@ -42,7 +42,7 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 		}
 		populationSolutions = sortPopulationPool(populationSolutions);
 		bestFitness = populationSolutions.get(0).getY();
-		Tuple<int[], Double> solution = immuneSystemSolution(seconds, 3);
+		Tuple<int[], Double> solution = immuneSystemSolution(seconds, 0.5);
 		System.out.println("The best solution is: " + Arrays.toString(solution.getX()) + " with a cost of : " + solution.getY()+ ".");
 	}
 
@@ -71,10 +71,12 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 				// calculate inverse fitness for the candidate
 				double inverseFitness = 1 - normaliseFitness(candidate.getY());
 				// calculate mutation rate : apply mutation with low rate to good solutions, high rate to bad solutions
-				double mutationRate = Math.exp(-p * inverseFitness);
+				double mutationRate = Math.exp(-p * inverseFitness) / 10;
 				if (rdm.nextDouble() < mutationRate) {
 					Tuple<int[], Double> mutatedRoute = mutateRoute(candidate, mutationRate);
 					clonalPool.set(i, mutatedRoute);
+				}
+				else {
 				}
 			}
 			// select replacement rate best solutions from parents and clone pool
@@ -98,7 +100,7 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 			}
 			//update best fitness encountered
 			populationSolutions = sortPopulationPool(populationSolutions);
-			System.out.println("Best solution so far: " + Arrays.toString(populationSolutions.get(0).getX()) + " : " + populationSolutions.get(0).getY());
+//			System.out.println("Best solution so far: " + Arrays.toString(populationSolutions.get(0).getX()) + " : " + populationSolutions.get(0).getY());
 			bestFitness = populationSolutions.get(0).getY();
 		}
 		populationSolutions = sortPopulationPool(populationSolutions);
