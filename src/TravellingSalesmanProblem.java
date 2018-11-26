@@ -28,9 +28,9 @@ public class TravellingSalesmanProblem {
 		}
 		System.out.println("Travelling Salesperson");
 		System.out.println("Random search:");
-		System.out.println(randomTSPSolution(route, 1));
+		System.out.println(randomTSPSolution(route, 5));
 		System.out.println("Two OPT local search:");
-		System.out.println(twoOptTSPSolution(route, 1));
+		System.out.println(twoOptTSPSolution(route, 5));
 	}
 
 	/**
@@ -57,18 +57,14 @@ public class TravellingSalesmanProblem {
 	 */
 	protected int[] getRandomRoute(int[] sourceRoute) {
 		Random rdm = new Random();
-		int[] randomisedRoute = new int[sourceRoute.length];
 		int[] toRandomise = sourceRoute.clone();
-		for (int i = toRandomise.length - 1; i > 0; i--) {
-			int index = rdm.nextInt(i+1);
+		for (int i = 0; i < toRandomise.length; i++) {
+			int index = rdm.nextInt(toRandomise.length - 1);
 			int a = toRandomise[index];
 			toRandomise[index] = toRandomise[i];
 			toRandomise[i] = a;
 		}
-		for (int i = 0; i < toRandomise.length; i++) {
-			randomisedRoute[i] = toRandomise[i];
-		}
-		return randomisedRoute;
+		return toRandomise;
 	}
 	
 	/**
