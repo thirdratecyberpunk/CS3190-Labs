@@ -1,3 +1,5 @@
+package lewisbb.cs3190.tsp;
+
 import java.util.Arrays;
 
 public class Tuple<T, E> implements Cloneable{ 

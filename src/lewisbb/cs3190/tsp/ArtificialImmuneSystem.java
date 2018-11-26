@@ -1,3 +1,5 @@
+package lewisbb.cs3190.tsp;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,7 +22,7 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 
 	public static void main(String[] args){
 		try {
-			new ArtificialImmuneSystem(50, 5, 5, 20);
+			new ArtificialImmuneSystem(50, 5, 5, 5);
 		} catch (CloneNotSupportedException e) {
 			System.out.println("ERROR CLONING");
 		}
