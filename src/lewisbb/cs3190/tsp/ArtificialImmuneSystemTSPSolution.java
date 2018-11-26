@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
+public class ArtificialImmuneSystemTSPSolution extends TravellingSalesmanProblem{
 	// initial population of solutions and an associated cost of the route
 	private ArrayList<Tuple<int[], Double>> populationSolutions;
 	// clonal pool where children of parents are stored
@@ -20,16 +20,8 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 	// best fitness encountered
 	private double bestFitness;
 
-	public static void main(String[] args){
-		try {
-			new ArtificialImmuneSystem(50, 5, 5, 5);
-		} catch (CloneNotSupportedException e) {
-			System.out.println("ERROR CLONING");
-		}
-	}
-
-	public ArtificialImmuneSystem(int populationSize, int replacementRate, int cloneSizeFactor, long seconds) throws CloneNotSupportedException {
-		super();
+	public ArtificialImmuneSystemTSPSolution(String inputFile, int populationSize, int replacementRate, int cloneSizeFactor, long seconds) throws CloneNotSupportedException {
+		super(inputFile);
 		this.populationSize = populationSize;
 		this.replacementRate = replacementRate;
 		this.cloneSizeFactor = cloneSizeFactor;
@@ -44,8 +36,6 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 		}
 		populationSolutions = sortPopulationPool(populationSolutions);
 		bestFitness = populationSolutions.get(0).getY();
-		Tuple<int[], Double> solution = immuneSystemSolution(seconds, 0.5);
-		System.out.println("The best solution is: " + Arrays.toString(solution.getX()) + " with a cost of : " + solution.getY()+ ".");
 	}
 
 	/**
@@ -55,8 +45,8 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 	 * @return
 	 * @throws CloneNotSupportedException
 	 */
-	@SuppressWarnings("unchecked")
-	private Tuple<int[], Double> immuneSystemSolution(long seconds, double p) throws CloneNotSupportedException {
+	@SuppressWarnings("unchecked") 
+	public Tuple<int[], Double> solution(long seconds, double p) throws CloneNotSupportedException {
 		// create clones of initial population and store them in clone pool
 		for (int i = 0; i <= cloneSizeFactor; i++) {
 			for (Tuple<int[], Double> solution: populationSolutions) {
@@ -102,7 +92,6 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 			}
 			//update best fitness encountered
 			populationSolutions = sortPopulationPool(populationSolutions);
-//			System.out.println("Best solution so far: " + Arrays.toString(populationSolutions.get(0).getX()) + " : " + populationSolutions.get(0).getY());
 			bestFitness = populationSolutions.get(0).getY();
 		}
 		populationSolutions = sortPopulationPool(populationSolutions);
@@ -134,6 +123,7 @@ public class ArtificialImmuneSystem extends TravellingSalesmanProblem{
 	 * method to sort a population into lowest cost to highest
 	 * @return 
 	 */
+	@SuppressWarnings("unchecked")
 	private ArrayList<Tuple<int[], Double>> sortPopulationPool(ArrayList<Tuple<int[], Double>> populationPool){
 		ArrayList<Tuple<int[],Double>> sortedPool = (ArrayList<Tuple<int[], Double>>) populationPool.clone();
 		boolean changeOccurred = true;
