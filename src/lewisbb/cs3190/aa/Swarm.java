@@ -33,12 +33,11 @@ public class Swarm {
 	 * @param seconds
 	 * @return
 	 */
-	public String particleSwarmOptimisationSolution(long seconds) {
-		BasicEx swarmVisualiser = new BasicEx();
-		swarmVisualiser.setVisible(true);
-		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
+	public String particleSwarmOptimisationSolution(long generations) {
+//		BasicEx swarmVisualiser = new BasicEx();
+//		swarmVisualiser.setVisible(true);
 		//		REPEAT UNTIL ( termination condition IS satisfied )
-		while(endCondition > System.nanoTime()){
+		for (int i = 0; i <= generations; i++){
 			//		UPDATE global best;
 			for (Particle particle: particles) {
 				double[] particleBest = particle.getPersonalBest();
@@ -56,7 +55,7 @@ public class Swarm {
 				// then EVALUATE new position and UPDATE personal best;
 				particle.evaluateCurrentPosition();
 			}
-			swarmVisualiser.updatePositions(this);
+//			swarmVisualiser.updatePositions(this);
 		}
 		return ("The best solution is " + Arrays.toString(globalBest) + "\nVALID : " + problemInstance.is_valid(globalBest) + " \nValue of " + globalBestValue + ".");
 	}

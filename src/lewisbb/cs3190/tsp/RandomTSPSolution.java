@@ -15,13 +15,13 @@ public class RandomTSPSolution extends TravellingSalesmanProblem{
 	 * @param seconds
 	 * @return
 	 */
-	public String solution(int[] exampleRoute, int seconds){
+	public String solution(int[] exampleRoute, int generations){
 		int[] bestRoute = null;
 		// and how much it costs
 		double bestRouteCost = Double.MAX_VALUE;
 		// for the number of seconds given, generate random routes
-		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
-		while(endCondition > System.nanoTime()){
+		for (int i = 0; i <= generations; i++) {
+			System.out.println("Generation " + i);
 			int[] newRoute = getRandomRoute(exampleRoute);
 			double newCost = getCostOfRoute(newRoute);
 			if (newCost < bestRouteCost){

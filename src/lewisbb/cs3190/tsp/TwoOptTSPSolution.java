@@ -16,14 +16,14 @@ public class TwoOptTSPSolution extends TravellingSalesmanProblem{
 	 * @param seconds
 	 * @return
 	 */
-	public String solution(int[] exampleRoute, int seconds) {
+	public String solution(int[] exampleRoute, int generations) {
 		// stores the best result
 		int[] bestRoute = null;
 		// and how much it costs
 		double bestRouteCost = Double.MAX_VALUE;
 		// for the number of seconds given, generate random routes
-		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
-		while(endCondition > System.nanoTime()){
+		for (int i = 0; i <= generations; i++){
+			System.out.println("Generation " + i);
 			// generate a random route
 			int[] newRandomRoute = getRandomRoute(exampleRoute);
 			// get the local optima for it

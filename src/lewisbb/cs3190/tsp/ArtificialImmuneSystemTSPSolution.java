@@ -20,7 +20,7 @@ public class ArtificialImmuneSystemTSPSolution extends TravellingSalesmanProblem
 	// best fitness encountered
 	private double bestFitness;
 
-	public ArtificialImmuneSystemTSPSolution(String inputFile, int populationSize, int replacementRate, int cloneSizeFactor, long seconds) throws CloneNotSupportedException {
+	public ArtificialImmuneSystemTSPSolution(String inputFile, int populationSize, int replacementRate, int cloneSizeFactor) throws CloneNotSupportedException {
 		super(inputFile);
 		this.populationSize = populationSize;
 		this.replacementRate = replacementRate;
@@ -46,7 +46,7 @@ public class ArtificialImmuneSystemTSPSolution extends TravellingSalesmanProblem
 	 * @throws CloneNotSupportedException
 	 */
 	@SuppressWarnings("unchecked") 
-	public Tuple<int[], Double> solution(long seconds, double p) throws CloneNotSupportedException {
+	public Tuple<int[], Double> solution(long generations, double p) throws CloneNotSupportedException {
 		// create clones of initial population and store them in clone pool
 		for (int i = 0; i <= cloneSizeFactor; i++) {
 			for (Tuple<int[], Double> solution: populationSolutions) {
@@ -55,18 +55,19 @@ public class ArtificialImmuneSystemTSPSolution extends TravellingSalesmanProblem
 		}
 		clonalPool = sortPopulationPool(clonalPool);
 		Random rdm = new Random();
-		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
-		while(endCondition > System.nanoTime()){
+		
+		for (int i = 0; i <= generations; i++) {
+			System.out.println("Generation " + i);
 			// for all clones in pool, apply inverse fitness proportional hyper mutation
-			for (int i = 0; i < clonalPool.size(); i++) {
-				Tuple<int[], Double> candidate = clonalPool.get(i);
+			for (int j = 0; j < clonalPool.size(); j++) {
+				Tuple<int[], Double> candidate = clonalPool.get(j);
 				// calculate inverse fitness for the candidate
 				double inverseFitness = 1 - normaliseFitness(candidate.getY());
 				// calculate mutation rate : apply mutation with low rate to good solutions, high rate to bad solutions
 				double mutationRate = Math.exp(-p * inverseFitness) / 10;
 				if (rdm.nextDouble() < mutationRate) {
 					Tuple<int[], Double> mutatedRoute = mutateRoute(candidate, mutationRate);
-					clonalPool.set(i, mutatedRoute);
+					clonalPool.set(j, mutatedRoute);
 				}
 				else {
 				}
@@ -94,7 +95,6 @@ public class ArtificialImmuneSystemTSPSolution extends TravellingSalesmanProblem
 			populationSolutions = sortPopulationPool(populationSolutions);
 			bestFitness = populationSolutions.get(0).getY();
 		}
-		populationSolutions = sortPopulationPool(populationSolutions);
 		return populationSolutions.get(0);
 	}
 	

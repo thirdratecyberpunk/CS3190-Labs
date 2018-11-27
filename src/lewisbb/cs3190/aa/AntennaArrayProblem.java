@@ -22,7 +22,7 @@ public class AntennaArrayProblem {
 		double cognitiveCoefficient = phi;
 		double socialCoefficient = phi;
 		System.out.println("Random search solution:");
-		System.out.println(getRandomSearchSolution(antennaArray, 4));
+		System.out.println(getRandomSearchSolution(antennaArray, 100));
 		System.out.println("Particle swarm optimisation solution:");
 		Swarm swarm = new Swarm(antennaArray, 3, inertialCoefficient, cognitiveCoefficient, socialCoefficient);
 		System.out.println(swarm.particleSwarmOptimisationSolution((long) 4));
@@ -64,11 +64,10 @@ public class AntennaArrayProblem {
 	 * @param seconds
 	 * @return
 	 */
-	private String getRandomSearchSolution(AntennaArray aa, int seconds){
+	private String getRandomSearchSolution(AntennaArray aa, int generations){
 		double[] bestSolution = null;
 		double bestSolutionCost = Double.MAX_VALUE;
-		long endCondition = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds);
-		while(endCondition > System.nanoTime()){
+		for (int i = 0; i <= generations; i++){
 			double[] newSolution = getRandomValidSolution(aa);
 			double newCost = aa.evaluate(newSolution);
 			if (newCost < bestSolutionCost){
