@@ -21,7 +21,6 @@ public class RandomTSPSolution extends TravellingSalesmanProblem{
 		double bestRouteCost = Double.MAX_VALUE;
 		// for the number of seconds given, generate random routes
 		for (int i = 0; i <= generations; i++) {
-			System.out.println("Generation " + i);
 			int[] newRoute = getRandomRoute(exampleRoute);
 			double newCost = getCostOfRoute(newRoute);
 			if (newCost < bestRouteCost){

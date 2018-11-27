@@ -23,7 +23,6 @@ public class TwoOptTSPSolution extends TravellingSalesmanProblem{
 		double bestRouteCost = Double.MAX_VALUE;
 		// for the number of seconds given, generate random routes
 		for (int i = 0; i <= generations; i++){
-			System.out.println("Generation " + i);
 			// generate a random route
 			int[] newRandomRoute = getRandomRoute(exampleRoute);
 			// get the local optima for it
